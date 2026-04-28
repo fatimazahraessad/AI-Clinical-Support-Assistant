@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedAI Neurology | Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #2563eb;    /* Bleu médical */
+            --secondary: #64748b;  /* Gris ardoise */
+            --danger: #ef4444;     /* Rouge alerte */
+            --success: #22c55e;    /* Vert santé */
+            --bg: #f8fafc;         /* Fond clair */
+            --card: #ffffff;
+        }
+
+        body { 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+            background: var(--bg); 
+            color: #1e293b;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container { 
+            max-width: 1300px; 
+            margin: 0 auto; 
+        }
+        
+        header { 
+            margin-bottom: 30px; 
+            text-align: center; 
+            padding: 20px 0;
+        }
+        header h1 { 
+            color: var(--primary); 
+            font-size: 2.2rem; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 15px;
+        }
+        header p { 
+            color: var(--secondary); 
+            font-size: 1.1rem; 
+            margin-top: 5px;
+        }
+
+        .grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1.3fr; 
+            gap: 25px; 
+            align-items: start; 
+        }
+        
+        @media (max-width: 900px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+
+        .card { 
+            background: var(--card); 
+            padding: 25px; 
+            border-radius: 16px; 
+            box-shadow: 0 4px 20px -2px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 { 
+            font-size: 1.2rem; 
+            margin-top: 0; 
+            margin-bottom: 20px;
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            color: #334155; 
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        /* --- FORMULAIRE --- */
+        .input-group { margin-bottom: 20px; }
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            color: var(--secondary); 
+            font-size: 0.85rem; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        textarea { 
+            width: 100%; 
+            border-radius: 12px; 
+            border: 2px solid #e2e8f0; 
+            padding: 15px; 
+            font-size: 1rem; 
+            transition: all 0.2s; 
+            resize: none; 
+            box-sizing: border-box;
+            background: #fff;
+        }
+        textarea:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        .file-section {
+            background: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .file-section:hover {
+            background: #e2e8f0;
+            border-color: var(--primary);
+        }
+        .file-section input[type="file"] {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            margin-top: 10px;
+        }
+
+        button { 
+            width: 100%; 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            padding: 16px; 
+            font-size: 1.1rem; 
+            font-weight: bold; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        button:hover { 
+            background: #1d4ed8; 
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+        }
+
+        /* --- RÉSULTATS --- */
+        .risk-badge {
+            font-size: 1.8rem; 
+            padding: 25px; 
+            border-radius: 16px; 
+            text-align: center;
+            margin-bottom: 25px; 
+            font-weight: 800;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .risk-badge small { font-size: 0.9rem; font-weight: 400; opacity: 0.9; }
+        
+        .high { background: #fef2f2; color: var(--danger); border: 2px solid #fee2e2; }
+        .low { background: #f0fdf4; color: var(--success); border: 2px solid #dcfce7; }
+
+        .symptoms-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+        .tag {
+            background: #e0e7ff; 
+            color: #4338ca;
+            padding: 6px 14px; 
+            border-radius: 99px; 
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid #c7d2fe;
+        }
+
+        .report-box {
+            background: #ffffff; 
+            padding: 25px; 
+            border-radius: 16px;
+            line-height: 1.7; 
+            border: 1px solid #e2e8f0;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+        }
+        .report-text { 
+            white-space: pre-line; 
+            color: #334155; 
+            font-size: 1.05rem; 
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--secondary);
+        }
+        .empty-state i { opacity: 0.2; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1><i class="fa-solid fa-house-medical-circle-check"></i> MedAI Neurology</h1>
+        <p>Aide au diagnostic intelligent & Analyse multimodale par IA</p>
+    </header>
+
+    <div class="grid">
+        <div class="card">
+            <h2><i class="fa-solid fa-user-plus"></i> Patient Entry</h2>
+            <form method="POST" enctype="multipart/form-data">
+                
+                <div class="input-group">
+                    <label>Description des symptômes / Observations</label>
+                    <textarea name="text_input" rows="6" placeholder="Ex: Patient de 75 ans, hypertension détectée, paralysie faciale droite..."></textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label>Fichier Audio ou Image (Optionnel)</label>
+                    <div class="file-section">
+                        <i class="fa-solid fa-file-medical fa-2x" style="color: var(--primary); margin-bottom: 10px;"></i>
+                        <br>
+                        <input type="file" name="file" id="file">
+                        <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 10px;">
+                            Formats supportés : JPG, PNG, MP3, WAV, M4A
+                        </p>
+                    </div>
+                </div>
+
+                <button type="submit">
+                    <i class="fa-solid fa-microscope"></i> Run Multimodal Analysis
+                </button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2><i class="fa-solid fa-file-waveform"></i> Analysis Results</h2>
+            
+            {% if result %}
+                {% if result['risk_score'] is not none %}
+                <div class="risk-badge {% if result['risk_score'] > 50 %}high{% else %}low{% endif %}">
+                    <small>Probabilité de Risque d'AVC (Modèle MLP)</small>
+                    {{ result['risk_score'] }}%
+                </div>
+                {% endif %}
+
+                <div class="symptoms-cloud">
+                    {% for symptom in result['symptoms'] %}
+                        <span class="tag">
+                            <i class="fa-solid fa-circle-check"></i> {{ symptom }}
+                        </span>
+                    {% endfor %}
+                </div>
+
+                <div class="report-box">
+                    <div class="report-text">
+                        {{ result['analysis'] | safe }}
+                    </div>
+                </div>
+
+                {% if result['sources'] %}
+                <div style="margin-top: 15px; font-size: 0.8rem; color: var(--secondary);">
+                    <i class="fa-solid fa-book-medical"></i> <strong>Sources RAG :</strong> {{ result['sources'] | join(', ') }}
+                </div>
+                {% endif %}
+
+            {% else %}
+                <div class="empty-state">
+                    <i class="fa-solid fa-brain fa-4x"></i>
+                    <p>En attente des données d'entrée...<br>Le moteur d'IA analysera les symptômes et consultera la base médicale.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
