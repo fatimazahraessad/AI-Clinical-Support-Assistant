@@ -1,9 +1,0 @@
-__pycache__/
-*.pkl
-vdb/
-venv/
-.vscode/
-ex.txt
-healthcare_dataset_cleaned.csv
-healthcare-dataset-stroke-data.csv
-resume2.docx
